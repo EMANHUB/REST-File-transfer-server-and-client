@@ -26,8 +26,9 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String nome, Date dataLogin) {
+    public Cliente(String nome, Date data) {
         this.nome = nome;
+        this.data=data;
     }
 
     //getter and setters
