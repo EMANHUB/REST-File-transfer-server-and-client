@@ -106,8 +106,9 @@ public class Clientes {
     public void verificaUtilizadores() {
         
         ArrayList<Cliente> remove = new ArrayList<Cliente>();//array de utilizadores a remover
+        if(clientes!=null){
         synchronized (clientes) {//impede race contions
-            if(clientes!=null){
+            
             for (Cliente x : clientes) {//percorre os clientes
                 long data1 = x.getData().getTime();//tempo da ultima atualizazão
                 long data2 = new Date().getTime();//tempo atual
