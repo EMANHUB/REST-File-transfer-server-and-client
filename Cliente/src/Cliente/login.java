@@ -188,7 +188,7 @@ public class login extends javax.swing.JFrame {
                 thread3 = new AtualizarFicheiros(jFNome.getText(), jTDir.getText(), baseUri, client);
                 t3 = new Thread(thread3);
                 t3.start();
-                thread4 = new AtualizarLog(p, baseUri, jFNome.getText(), client);
+                thread4 = new AtualizarLog(p, baseUri, client);
                 t4 = new Thread(thread4);
                 t4.start();
 
