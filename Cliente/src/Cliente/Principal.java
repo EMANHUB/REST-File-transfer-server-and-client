@@ -261,7 +261,7 @@ public class Principal extends javax.swing.JFrame {
     //função para atualizar o texto do log
     public void log(String lista) {
         if (lista != null) {
-            jTLog.setText(lista);
+            jTLog.append(lista);
         }
     }
 
