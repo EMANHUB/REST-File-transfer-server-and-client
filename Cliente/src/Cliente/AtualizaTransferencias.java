@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -80,7 +78,7 @@ public class AtualizaTransferencias implements Runnable {
                         }
 
                     }
-                    
+
                     //caso este cliente tenha um download para fazer
                     if (x.getEstado() == 1 && x.getDestino().equals(nome)) {
 
@@ -94,19 +92,24 @@ public class AtualizaTransferencias implements Runnable {
                             File ficheiro = resultado2.readEntity(new GenericType<File>() {
                             });
                             File destino = new File(caminho + File.separator + x.getNome());
-                            
+
                             //se já existir o ficheiro na pasta destino
                             if (destino.exists()) {
                                 int reply = JOptionPane.showConfirmDialog(null, "Pretende substituir o ficheiro?", "Ficheiro já existe!", JOptionPane.YES_NO_OPTION);
                                 if (reply != JOptionPane.YES_OPTION) {
                                     ficheiro.delete();
-                                    return;
+
+                                } else {
+                                    copyFileUsingChannel(ficheiro, destino);
+                                    ficheiro.delete();
+                                    System.out.println("Download com sucesso!");
                                 }
+                            } else {
+                                copyFileUsingChannel(ficheiro, destino);
+                                ficheiro.delete();
+                                System.out.println("Download com sucesso!");
                             }
-                            //copiar o ficheiro da pasta temp para a diretoria escolhida pelo utilizador
-                            copyFileUsingChannel(ficheiro, destino);
-                            ficheiro.delete();
-                            System.out.println("Download com sucesso!");
+
                         }
 
                     }
