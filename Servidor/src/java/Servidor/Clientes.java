@@ -35,7 +35,6 @@ public class Clientes {
     @Path("{nome}")
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public Cliente getCliente(@PathParam("nome") String nome) {//devolve um cliente com o nome dado pelo path
-        verificaUtilizadores();
         synchronized (clientes) {//impede race conditions
             for (Cliente x : clientes) {//perpcorre todos os clientes
                 if (x.getNome().equals(nome)) {//encontra o cliente com nome do path
@@ -49,7 +48,6 @@ public class Clientes {
     @POST
     @Consumes({"application/xml", "application/json"})//definir que tipo consume neste caso tipo formulário
     public void login(Cliente cliente) {//parametros a receber
-        verificaUtilizadores();
         synchronized (clientes) {
             for (Cliente x : clientes) {//percorrer array para veridicar se existe um utilizaidor ativo com este nome
                 if (x.getNome().equals(cliente.getNome())) {
@@ -109,7 +107,7 @@ public class Clientes {
             synchronized (clientes) {//impede race contions
 
                 for (Cliente x : clientes) {//percorre os clientes
-                    long data1 = x.getData().getTime();//tempo da ultima atualizazão
+                    long data1 = x.getData().getTime();//tempo da ultima atualização
                     long data2 = new Date().getTime();//tempo atual
                     System.out.println((data2 - data1));
                     if ((data2 - data1) > 10000) {//diferença maior que 10 segundos cliente expirado
@@ -118,9 +116,10 @@ public class Clientes {
                         adicionaLog("");
                     }
                 }
+                clientes.removeAll(remove);//remove todos os clientes da lista para remover
             }
         }
-        clientes.removeAll(remove);//remove todos os clientes da lista para remover
+        
 
     }
 
