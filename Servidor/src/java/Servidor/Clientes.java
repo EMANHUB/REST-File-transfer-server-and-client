@@ -13,7 +13,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("Clientes")//definição do path
@@ -26,6 +25,7 @@ public class Clientes {
     @GET
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public List<Cliente> getClientes() {//devolve todos os clientes
+        verificaUtilizadores();
         synchronized (clientes) {
             return clientes;
         }
@@ -35,6 +35,7 @@ public class Clientes {
     @Path("{nome}")
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public Cliente getCliente(@PathParam("nome") String nome) {//devolve um cliente com o nome dado pelo path
+        verificaUtilizadores();
         synchronized (clientes) {//impede race conditions
             for (Cliente x : clientes) {//perpcorre todos os clientes
                 if (x.getNome().equals(nome)) {//encontra o cliente com nome do path
@@ -48,6 +49,7 @@ public class Clientes {
     @POST
     @Consumes({"application/xml", "application/json"})//definir que tipo consume neste caso tipo formulário
     public void login(Cliente cliente) {//parametros a receber
+        verificaUtilizadores();
         synchronized (clientes) {
             for (Cliente x : clientes) {//percorrer array para veridicar se existe um utilizaidor ativo com este nome
                 if (x.getNome().equals(cliente.getNome())) {
@@ -67,6 +69,7 @@ public class Clientes {
     @Path("{nome}")
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public Cliente delCliente(@PathParam("nome") String nome) {//elimina um cliente com o nome dado por path
+        verificaUtilizadores();
         synchronized (clientes) {//impede race conditions
             for (Cliente x : clientes) {//percorre todos os clientes
                 if (x.getNome().equals(nome)) {//encontra o cliente com o nome do path
@@ -85,6 +88,7 @@ public class Clientes {
     @Path("{nome}")
     @Consumes({"application/xml", "application/json"})//definir que tipo consume neste caso tipo formulário
     public void updateCliente(Cliente cliente, @PathParam("nome") String nome) {//parametros a receber
+        verificaUtilizadores();
         synchronized (clientes) {
             for (Cliente x : clientes) {//percorrer array
                 if (x.getNome().equals(nome)) {
@@ -98,7 +102,7 @@ public class Clientes {
 
     }
 
-    public void verificaUtilizadores1() {
+    public void verificaUtilizadores() {
 
         ArrayList<Cliente> remove = new ArrayList<Cliente>();//array de utilizadores a remover
         if (clientes != null) {
