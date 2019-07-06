@@ -119,7 +119,7 @@ public class AtualizaTransferencias implements Runnable {
             }
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 System.out.println("Interrumpida!");
             }
