@@ -35,6 +35,7 @@ public class Clientes {
     @Path("{nome}")
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public Cliente getCliente(@PathParam("nome") String nome) {//devolve um cliente com o nome dado pelo path
+        verificaUtilizadores();
         synchronized (clientes) {//impede race conditions
             for (Cliente x : clientes) {//perpcorre todos os clientes
                 if (x.getNome().equals(nome)) {//encontra o cliente com nome do path
@@ -48,6 +49,7 @@ public class Clientes {
     @POST
     @Consumes({"application/xml", "application/json"})//definir que tipo consume neste caso tipo formulário
     public void login(Cliente cliente) {//parametros a receber
+        verificaUtilizadores();
         synchronized (clientes) {
             for (Cliente x : clientes) {//percorrer array para veridicar se existe um utilizaidor ativo com este nome
                 if (x.getNome().equals(cliente.getNome())) {
