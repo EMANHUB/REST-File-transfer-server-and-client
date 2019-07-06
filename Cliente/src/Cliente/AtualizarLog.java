@@ -24,18 +24,18 @@ public class AtualizarLog implements Runnable {
     
     //variaveis
     private Principal frame;
-    private String nome;
     private Client cliente;
     private String baseUri;
     private boolean flag;
+    int n;
     
     //construtor
-    public AtualizarLog(Principal frame, String baseUri, String nome, Client cliente) {
+    public AtualizarLog(Principal frame, String baseUri, Client cliente) {
         this.frame = frame;
         this.baseUri = baseUri;
-        this.nome = nome;
         this.flag = true;
         this.cliente = cliente;
+        this.n=-1;
     }
     
     //função para acabar a thread pois acaba com o ciclo e acaba o método run logo acaba a thread
@@ -48,10 +48,26 @@ public class AtualizarLog implements Runnable {
     //função que permite atualizar o log da aplicação
     public void run() {
         while (flag) {
-      
-
+            Response resultado = cliente.target(baseUri)
+                    .path("Log/"+n)
+                    .request()
+                    .accept(MediaType.APPLICATION_XML)
+                    .get();
+            
+            if (resultado.getStatus() == 200) {
+                ArrayList<log> log = (ArrayList<log>) resultado.readEntity(new GenericType<List<log>>() {
+                });
+                String append="";
+                log ultimo=null;
+                for(log x: log){
+                    ultimo=x;
+                    append+=x.getMsg()+"\n";
+                }
+                if(ultimo!=null)this.n=ultimo.getId();
+                frame.log(append);
+            }
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 System.out.println("Interrumpida!");
             }
