@@ -16,7 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("Tranferencias")//definição do path
+@Path("Transferencias")//definição do path
 public class Transferencias {
 
     @Context
