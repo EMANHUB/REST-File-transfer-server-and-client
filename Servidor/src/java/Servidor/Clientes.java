@@ -26,7 +26,6 @@ public class Clientes {
     @GET
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public List<Cliente> getClientes() {//devolve todos os clientes
-        verificaUtilizadores();
         synchronized (clientes) {
             return clientes;
         }
@@ -36,7 +35,6 @@ public class Clientes {
     @Path("{nome}")
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public Cliente getCliente(@PathParam("nome") String nome) {//devolve um cliente com o nome dado pelo path
-        verificaUtilizadores();
         synchronized (clientes) {//impede race conditions
             for (Cliente x : clientes) {//perpcorre todos os clientes
                 if (x.getNome().equals(nome)) {//encontra o cliente com nome do path
@@ -50,7 +48,6 @@ public class Clientes {
     @POST
     @Consumes({"application/xml", "application/json"})//definir que tipo consume neste caso tipo formulário
     public void login(Cliente cliente) {//parametros a receber
-        verificaUtilizadores();
         synchronized (clientes) {
             for (Cliente x : clientes) {//percorrer array para veridicar se existe um utilizaidor ativo com este nome
                 if (x.getNome().equals(cliente.getNome())) {
@@ -58,7 +55,7 @@ public class Clientes {
                 }
             }
             if (clientes.add(cliente)) {//insere nos clientes ativos
-                adicionaLog("O cliente "+cliente.getNome()+" iniciou sessão");
+                adicionaLog("O cliente " + cliente.getNome() + " iniciou sessão");
                 throw new WebApplicationException(Response.Status.OK);//caso de inserção com sucesso devolve 200 ok
             } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);//caso de erro devolve 209
@@ -70,13 +67,12 @@ public class Clientes {
     @Path("{nome}")
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
     public Cliente delCliente(@PathParam("nome") String nome) {//elimina um cliente com o nome dado por path
-        verificaUtilizadores();
         synchronized (clientes) {//impede race conditions
             for (Cliente x : clientes) {//percorre todos os clientes
                 if (x.getNome().equals(nome)) {//encontra o cliente com o nome do path
                     clientes.remove(x);//remove da lista de clientes ativos
                     System.out.println("Cliente logout");
-                    adicionaLog("O cliente "+x.getNome()+" fez logout");
+                    adicionaLog("O cliente " + x.getNome() + " fez logout");
                     throw new WebApplicationException(Response.Status.OK);//codigo 200 ok sucesso
                 }
             }
@@ -89,7 +85,6 @@ public class Clientes {
     @Path("{nome}")
     @Consumes({"application/xml", "application/json"})//definir que tipo consume neste caso tipo formulário
     public void updateCliente(Cliente cliente, @PathParam("nome") String nome) {//parametros a receber
-        verificaUtilizadores();
         synchronized (clientes) {
             for (Cliente x : clientes) {//percorrer array
                 if (x.getNome().equals(nome)) {
@@ -103,28 +98,28 @@ public class Clientes {
 
     }
 
-    public void verificaUtilizadores() {
-        
+    public void verificaUtilizadores1() {
+
         ArrayList<Cliente> remove = new ArrayList<Cliente>();//array de utilizadores a remover
-        if(clientes!=null){
-        synchronized (clientes) {//impede race contions
-            
-            for (Cliente x : clientes) {//percorre os clientes
-                long data1 = x.getData().getTime();//tempo da ultima atualizazão
-                long data2 = new Date().getTime();//tempo atual
-                System.out.println((data2 - data1));
-                if ((data2 - data1) > 10000) {//diferença maior que 10 segundos cliente expirado
-                    remove.add(x);//adiciona o cliente à lista de clientes para eliminar
-                    System.out.println("Cliente Expirado");
-                    adicionaLog("");
+        if (clientes != null) {
+            synchronized (clientes) {//impede race contions
+
+                for (Cliente x : clientes) {//percorre os clientes
+                    long data1 = x.getData().getTime();//tempo da ultima atualizazão
+                    long data2 = new Date().getTime();//tempo atual
+                    System.out.println((data2 - data1));
+                    if ((data2 - data1) > 10000) {//diferença maior que 10 segundos cliente expirado
+                        remove.add(x);//adiciona o cliente à lista de clientes para eliminar
+                        System.out.println("Cliente Expirado");
+                        adicionaLog("");
+                    }
                 }
-            }
             }
         }
         clientes.removeAll(remove);//remove todos os clientes da lista para remover
 
     }
-    
+
     public void adicionaLog(String acao) {
         synchronized (log) {//impede race coditions
             SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss");
@@ -134,15 +129,15 @@ public class Clientes {
             }
         }
     }
-    
+
     @GET
     @Path("Log/{n}")
     @Produces({"application/xml", "application/json"})//definição do media type que retorna
-    public List<log> getLog(@PathParam("log") int n) {//devolve todos os clientes
+    public List<log> getLog(@PathParam("n") int n) {//devolve todos os clientes
         ArrayList<log> devolve = new ArrayList<log>();
         synchronized (log) {
-            for(log x: log){
-                if(x.getId()>n){
+            for (log x : log) {
+                if (x.getId() > n) {
                     devolve.add(x);
                 }
             }
