@@ -18,6 +18,10 @@ public class log {
     
     private String msg;
     private int id;
+    //construtor
+    public log() {
+    }
+
 
     public log(String msg, int id) {
         this.msg = msg;
