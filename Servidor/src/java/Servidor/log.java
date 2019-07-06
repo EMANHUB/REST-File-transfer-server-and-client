@@ -5,10 +5,14 @@
  */
 package Servidor;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Emanuel Rodrigues
  */
+@XmlRootElement(name = "log")
 public class log {
     
     
@@ -27,7 +31,8 @@ public class log {
     public void setMsg(String msg) {
         this.msg = msg;
     }
-
+    
+    @XmlAttribute
     public int getId() {
         return id;
     }
