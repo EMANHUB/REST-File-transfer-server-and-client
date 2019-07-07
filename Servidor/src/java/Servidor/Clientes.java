@@ -149,7 +149,7 @@ public class Clientes {
             }
             }
             else{
-                devolve.add(log.get(log.size()));
+                devolve.add(log.get(log.size()-1));
             }
             
         }
