@@ -43,10 +43,9 @@ public class AtualizarFicheiros implements Runnable {
         while(flag){
             //mandar o a atualização das diretorias e a data de atualização para verificar se o cliente não está
             //expirado caso tenha ocorrido uma falha de rede  ou o cliente abortasse o programa forçadamente
-            System.out.println(updateCliente(nome,caminho));
-            System.out.println(new Date());
+            updateCliente(nome,caminho);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(AtualizarFicheiros.class.getName()).log(Level.SEVERE, null, ex);
             }
