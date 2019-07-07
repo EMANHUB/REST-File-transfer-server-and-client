@@ -224,14 +224,14 @@ public class Principal extends javax.swing.JFrame {
         } else if (selectedNode.getParent().toString().equals("Meus Ficheiros")) {
             JOptionPane.showMessageDialog(this, "Não pode efetuar download dos seus próprios ficheiros!");
         } else {
-            Response resultado = cliente.target(baseUri.replace("Clientes","Transferencias"))
+            Response resultado = cliente.target(baseUri)
                     .path(selectedNode.getParent().toString())
                     .request()
                     .accept(MediaType.APPLICATION_XML)
                     .get();
             if (resultado.getStatus() == 200) {
                 Cliente cli = resultado.readEntity(Cliente.class);
-                Response resultado2 = cliente.target(baseUri.replace("Clientes","Transferencias"))
+                Response resultado2 = cliente.target(baseUri)
                         .path(nome)
                         .request()
                         .accept(MediaType.APPLICATION_XML)
@@ -241,7 +241,6 @@ public class Principal extends javax.swing.JFrame {
                     Transferencia t = new Transferencia(eu.getNome(), cli.getNome());
                     t.setNome(selectedNode.toString());
                     Response resultado3 = cliente.target(baseUri.replace("Clientes","Transferencias"))
-                            .path("transferencias")
                             .request()
                             .accept(MediaType.APPLICATION_XML)
                             .post(Entity.xml(t));
