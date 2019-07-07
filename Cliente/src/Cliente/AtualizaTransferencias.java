@@ -54,7 +54,6 @@ public class AtualizaTransferencias implements Runnable {
         while (flag) {
             //obter todas as transferencias
             Response resultado = cliente.target(baseUri)
-                    .path("transferencias")
                     .request()
                     .accept(MediaType.APPLICATION_XML)
                     .get();
@@ -68,7 +67,7 @@ public class AtualizaTransferencias implements Runnable {
                         File f = new File(caminho + File.separator + x.getNome());
                         if (f.exists()) {
                             Response resultado2 = cliente.target(baseUri)
-                                    .path("transferencias/" + x.getId())
+                                    .path(""+x.getId())
                                     .request()
                                     .accept(MediaType.APPLICATION_OCTET_STREAM)
                                     .put(Entity.entity(f, MediaType.APPLICATION_OCTET_STREAM));
@@ -83,12 +82,12 @@ public class AtualizaTransferencias implements Runnable {
                     if (x.getEstado() == 1 && x.getDestino().equals(nome)) {
 
                         Response resultado2 = cliente.target(baseUri)
-                                .path("transferencias/" + x.getId())
+                                .path("" + x.getId())
                                 .request()
                                 .accept(MediaType.APPLICATION_OCTET_STREAM)
                                 .get();
                         if (resultado2.getStatus() == 200) {
-
+                            System.out.println("asdasdasdasd");
                             File ficheiro = resultado2.readEntity(new GenericType<File>() {
                             });
                             File destino = new File(caminho + File.separator + x.getNome());
@@ -105,6 +104,7 @@ public class AtualizaTransferencias implements Runnable {
                                     System.out.println("Download com sucesso!");
                                 }
                             } else {
+                                
                                 copyFileUsingChannel(ficheiro, destino);
                                 ficheiro.delete();
                                 System.out.println("Download com sucesso!");
