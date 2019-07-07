@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,10 +20,10 @@ import javax.ws.rs.core.Response;
 @Path("Transferencias")//definição do path
 public class Transferencias {
 
-    @Context
-    private ApplicationConfig app;
+    private @Context Application app;
     private Clientes getCliente() {
         for (Object o : app.getSingletons()) {
+            System.out.println(o.getClass());
             if (o instanceof Clientes) {
                 return (Clientes) o;
             }
@@ -92,7 +93,8 @@ public class Transferencias {
                     file = new File(x.getCaminho());//abre o ficheiro
                     if (file.exists()) {//caso exista
                         x.setEstado(2);//muda estado para 2 (transferido)
-                        //getCliente().adicionaLog("O cliente "+x.getFonte()+" fez o download com sucesso do ficheiro "+x.getNome()+" de "+x.getDestino());
+                        Clientes Clientes = getCliente();
+                        if(Clientes!=null)Clientes.adicionaLog("O cliente "+x.getDestino()+" fez o download com sucesso do ficheiro "+x.getNome()+" de "+x.getFonte());
                     }
                 }
             }
