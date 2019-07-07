@@ -115,7 +115,7 @@ public class Clientes {
                     if ((data2 - data1) > 10000) {//diferença maior que 10 segundos cliente expirado
                         remove.add(x);//adiciona o cliente à lista de clientes para eliminar
                         System.out.println("Cliente Expirado");
-                        adicionaLog("");
+                        adicionaLog("O cliente "+x.getNome()+" expirou");
                     }
                 }
                 clientes.removeAll(remove);//remove todos os clientes da lista para remover
@@ -141,11 +141,17 @@ public class Clientes {
     public List<log> getLog(@PathParam("n") int n) {//devolve todos os clientes
         ArrayList<log> devolve = new ArrayList<log>();
         synchronized (log) {
+            if(n!=-1){
             for (log x : log) {
                 if (x.getId() > n) {
                     devolve.add(x);
                 }
             }
+            }
+            else{
+                devolve.add(log.get(log.size()));
+            }
+            
         }
         return devolve;
     }
