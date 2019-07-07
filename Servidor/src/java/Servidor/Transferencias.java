@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 public class Transferencias {
 
     @Context
-    private ApplicationConfig app;
+    private ApplicationConfig app= new ApplicationConfig();
     private Clientes getCliente() {
         for (Object o : app.getSingletons()) {
             if (o instanceof Clientes) {
@@ -92,7 +92,7 @@ public class Transferencias {
     public Response getFile(@PathParam("id") int id) {
         File file = null;
         synchronized (transferencias) {
-
+            System.out.println("Entrou aqui");
             for (Transferencia x : transferencias) {//percorre transferencias
                 if (x.getId() == id && x.getEstado() < 2) {//só fica disponivel uma vez para download
                     file = new File(x.getCaminho());//abre o ficheiro
@@ -115,15 +115,15 @@ public class Transferencias {
 
     public void limpaFicheiros() {
         synchronized (transferencias) {//impede race coditions
-            for (Transferencia x : transferencias) {//percorre o array de transferencias
-                if (x.getEstado() == 2) {//caro o estádo seja dois, ou seja, tranferido transfere com sucesso
+            /*for (Transferencia x : transferencias) {//percorre o array de transferencias
+                if (x.getEstado() == 2) {//caso o estado seja dois, ou seja, tranferido transfere com sucesso
                     File f = new File(x.getCaminho());//verifica se o ficheiro exite mesmo no servidor
                     if (f.exists()) {//caso exista
                         x.setEstado(4);//muda o estado da transferencia para 4 e elimina o ficheiro
                         f.delete();
                     }
                 }
-            }
+            }*/
         }
     }
 
