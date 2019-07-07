@@ -80,14 +80,12 @@ public class AtualizaTransferencias implements Runnable {
 
                     //caso este cliente tenha um download para fazer
                     if (x.getEstado() == 1 && x.getDestino().equals(nome)) {
-
                         Response resultado2 = cliente.target(baseUri)
                                 .path("" + x.getId())
                                 .request()
                                 .accept(MediaType.APPLICATION_OCTET_STREAM)
                                 .get();
                         if (resultado2.getStatus() == 200) {
-                            System.out.println("asdasdasdasd");
                             File ficheiro = resultado2.readEntity(new GenericType<File>() {
                             });
                             File destino = new File(caminho + File.separator + x.getNome());
