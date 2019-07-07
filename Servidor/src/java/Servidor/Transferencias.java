@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 public class Transferencias {
 
     @Context
-    private ApplicationConfig app= new ApplicationConfig();
+    private ApplicationConfig app;
     private Clientes getCliente() {
         for (Object o : app.getSingletons()) {
             if (o instanceof Clientes) {
@@ -33,14 +33,7 @@ public class Transferencias {
     private ArrayList<Transferencia> transferencias = new ArrayList<Transferencia>(); //inicialização do arraylist de transferencias 
     private Integer nTranferencias = 0;//inicialização do contador do ir das tranferencias
 
-    @GET
-    //@Produces({"application/xml", "application/json"})//definição do media type que retorna
-    @Produces(MediaType.TEXT_PLAIN)
 
-    public String getClientes() {//devolve todos os clientes
-        return "sucesso";
-
-    }
 
     @POST
     @Consumes({"application/xml", "application/json"})//definir que tipo consume neste caso tipo formulário
@@ -90,6 +83,7 @@ public class Transferencias {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)//definição do media type que retorna
     public Response getFile(@PathParam("id") int id) {
+        limpaFicheiros();
         File file = null;
         synchronized (transferencias) {
             System.out.println("Entrou aqui");
@@ -98,13 +92,11 @@ public class Transferencias {
                     file = new File(x.getCaminho());//abre o ficheiro
                     if (file.exists()) {//caso exista
                         x.setEstado(2);//muda estado para 2 (transferido)
-                        getCliente().adicionaLog("O cliente "+x.getFonte()+" fez o download com sucesso do ficheiro "+x.getNome()+" de "+x.getDestino());
+                        //getCliente().adicionaLog("O cliente "+x.getFonte()+" fez o download com sucesso do ficheiro "+x.getNome()+" de "+x.getDestino());
                     }
                 }
             }
         }
-        limpaFicheiros();
-        
         if (file != null && file.exists()) {//caso ficheiro exista devolve o ficheiro codigo 200ok
             return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM).build();
         } else {
@@ -115,7 +107,7 @@ public class Transferencias {
 
     public void limpaFicheiros() {
         synchronized (transferencias) {//impede race coditions
-            /*for (Transferencia x : transferencias) {//percorre o array de transferencias
+            for (Transferencia x : transferencias) {//percorre o array de transferencias
                 if (x.getEstado() == 2) {//caso o estado seja dois, ou seja, tranferido transfere com sucesso
                     File f = new File(x.getCaminho());//verifica se o ficheiro exite mesmo no servidor
                     if (f.exists()) {//caso exista
@@ -123,7 +115,7 @@ public class Transferencias {
                         f.delete();
                     }
                 }
-            }*/
+            }
         }
     }
 
